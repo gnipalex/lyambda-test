@@ -8,8 +8,6 @@ import java.util.function.Predicate;
 
 public class Main {
 
-    Main(){}
-
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InterruptedException {
         List<Integer> elements = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
 
