@@ -1,73 +1,54 @@
 package com.sveta;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Svitlana_Peleshenko on 1/23/2018.
- */
+import static java.util.stream.Collectors.toMap;
+
 public class CollectionTasks {
-
-    public static Map<Integer, Integer> getElementsStatistics(List<List<Integer>> lists) {
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-        int size = lists.size();
-        int a;
-        int b;
-        for (int i = 0; i < size; i++) {
-            List<Integer> list1 = lists.get(i);
-            int list1Size = list1.size();
-            for (int j = 0; j < list1Size; j++) {
-                int countOfRepeat = 0;
-                List<Integer> listNext = lists.get(i + 1);
-                int listNextSize = listNext.size();
-                for (int k = 0; k < listNextSize; k++) {
-                    System.out.println(a = list1.get(j));
-                    System.out.println(b = listNext.get(k));
-                    if (list1.get(j) == listNext.get(k)) {
-                        ++countOfRepeat;
-                    }
+    public static List<ComparableMap<String, String>> getComparableMapsFromMaps(final List<Map<String, String>> maps) {
+        List<ComparableMap<String, String>> expectedRows = new ArrayList<>();
+        maps.stream().forEach(map -> {
+                    ComparableMap<String, String> mapped = map.entrySet().stream()
+                            .collect(toMap(
+                                    e -> e.getKey(),
+                                    e -> e.getValue().toString().replaceAll("\\s{2,}", " "),
+                                    (v1, v2) -> v1,
+                                    ComparableMap::new
+                            ));
+                    expectedRows.add(mapped);
                 }
-                map.put(list1.get(j), countOfRepeat);
-            }
-
-        }
-
-        return map;
-
-    }
-
-    public static Map<Integer, Integer> getElementsStatistics1(List<List<Integer>> lists) {
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-
-        for (List<Integer> innerList : lists) {
-            for (Integer innerListValue : innerList) {
-                Integer countOfMatches = map.get(innerListValue);
-                if (countOfMatches != null) {
-                    countOfMatches++;
-                } else {
-                    countOfMatches = 1;
-                }
-                map.put(innerListValue, countOfMatches);
-            }
-        }
-
-        return map;
+        );
+        return expectedRows;
     }
 
     public static void main(String[] args) {
-        List<List<Integer>> lists = Arrays.asList(Arrays.asList(1, 2, 3), Arrays.asList(1, 4, 8));
+        List<Map<String, String>> expectedRows = new ArrayList<>();
+        Map<String, String> map1 = new HashMap<String, String>();
+        map1.put("description", "AISLE 0 LE");
+        map1.put("description1", "Aisle  01");
+        Map<String, String> map2 = new HashMap<String, String>();
+        map2.put("location", "001L01");
+        map2.put("location1", "001L03");
+        expectedRows.add(map1);
+        expectedRows.add(map2);
 
-        getElementsStatistics1(lists).entrySet()
-                .stream()
-                .forEach(e -> System.out.println(e.getKey() + "-" + e.getValue()));
+        System.out.println(getComparableMapsFromMaps(expectedRows));
 
+
+//        forEach(e -> e.entrySet().stream()
+//                .collect(Collectors.toMap(k -> System.out.println(k.getKey()), k -> System.out.println(k.getValue().toString().replaceAll("\\s{2,}", " ")))));
+    }
+}
+
+class ComparableMap<K, V> extends HashMap {
+
+    public ComparableMap() {
     }
 
-    static class Record {
-
+    public ComparableMap(Map<K, V> source) {
+        super(source);
     }
-
-
 }
